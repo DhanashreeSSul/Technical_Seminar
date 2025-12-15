@@ -1,0 +1,176 @@
+I am building a real-time, dynamic web platform for women empowerment and career guidance.
+
+PURPOSE:
+The website is a secure AI-enabled guidance platform that helps women discover what they can do next — learn a skill, find a role, or start a micro-enterprise. The platform connects users to trusted NGOs, government schemes, and official learning portals. It is a guide, not a service provider.
+
+TARGET USERS:
+1. Women users (students, career returnees, career switchers, micro-entrepreneurs)
+2. NGOs and foundations that provide courses, workshops, jobs, or awareness programs
+3. Admin (platform owner)
+
+TECH REQUIREMENTS:
+- Fully online, real-time dynamic website
+- Clean, modern, professional UI
+- Mobile responsive
+- Secure authentication
+- Proper backend with database
+- Role-based access control
+- API-based architecture
+
+--------------------------------
+FRONTEND PAGES REQUIRED
+--------------------------------
+
+1. HOME PAGE
+- Hero section with headline explaining women guidance platform
+- CTA buttons:
+  - “Get Guidance”
+  - “Register as NGO”
+- Features section (AI chatbot, schemes, roadmap, NGO support)
+- How it works (step-by-step)
+- Trust & privacy note
+- Footer with contact, privacy, about
+
+2. USER AUTHENTICATION
+- Login / Signup using Phone OTP (Aadhaar-style mobile OTP simulation)
+- Do NOT store Aadhaar number
+- Secure OTP verification
+- After login redirect to User Dashboard
+
+3. USER DASHBOARD
+- Profile summary (skills, interests, location)
+- Chatbot access
+- Personalized recommendations
+- Roadmap (4–6 week plan)
+- Saved opportunities
+- View NGO events
+- Logout
+
+4. AI CHATBOT PAGE
+- Text-based chatbot UI
+- Multilingual support (English + local languages)
+- Chatbot should:
+  - Ask interests, skills, constraints
+  - Detect intent (skill learning, job, business)
+  - Suggest best next steps
+- Chat history saved securely
+
+5. NGO PUBLIC EVENTS PAGE
+- List of NGO events/courses
+- Filters:
+  - Category
+  - Location
+  - Mode (online/offline)
+- Event detail page
+- “Apply / Learn More” button
+
+--------------------------------
+NGO MODULE (VERY IMPORTANT)
+--------------------------------
+
+6. NGO REGISTRATION PAGE
+- NGO Name
+- Registration Number (optional)
+- Address (State, District)
+- Description
+- Contact Person
+- Email
+- Phone (OTP verification)
+- Optional certificate upload
+
+7. NGO LOGIN
+- Secure login (OTP or email/password)
+
+8. NGO DASHBOARD
+- Summary cards:
+  - Total events
+  - Active events
+  - Views / clicks
+- Buttons:
+  - Create Event
+  - Manage Events
+  - Update Profile
+  - Logout
+
+9. CREATE / MANAGE EVENTS
+- Event title
+- Category (course, workshop, job, awareness)
+- Mode (online/offline/hybrid)
+- Description
+- Skills required
+- Target audience
+- Start & end dates
+- Location
+- Registration link
+- Upload flyer
+- Edit / delete events
+
+--------------------------------
+BACKEND REQUIREMENTS
+--------------------------------
+
+- Backend must be included (Node.js / Python / built-in backend)
+- Database tables / collections for:
+  - Users
+  - NGOs
+  - Events
+  - Chat sessions
+  - Recommendations
+  - Roadmaps
+- REST APIs for:
+  - Authentication (OTP-based)
+  - User profile
+  - NGO events CRUD
+  - Chatbot interaction
+  - Recommendations
+- Role-based access:
+  - USER
+  - NGO
+  - ADMIN
+
+--------------------------------
+AI & LOGIC
+--------------------------------
+
+- AI chatbot logic (can be rule-based + AI)
+- Interest detection
+- Recommendation ranking
+- Roadmap generation (week-wise steps)
+- Lightweight AI (no heavy data collection)
+
+--------------------------------
+SECURITY REQUIREMENTS
+--------------------------------
+
+- HTTPS
+- OTP rate limiting
+- JWT or secure session tokens
+- Input validation
+- Secure file upload
+- No storage of sensitive IDs
+- Consent-based data collection
+- Easy account deletion
+
+--------------------------------
+DESIGN REQUIREMENTS
+--------------------------------
+
+- Clean, aesthetic UI
+- Modern typography
+- Soft colors
+- Accessible design
+- Professional NGO-friendly look
+- Dashboard-style layouts
+
+--------------------------------
+OUTPUT EXPECTED
+--------------------------------
+
+- Fully working real-time website
+- Frontend + backend included
+- Database connected
+- Dynamic pages
+- Ready for demo and deployment
+- Clear separation of User and NGO flows
+
+Build the entire system accordingly.
