@@ -45,7 +45,8 @@ const states = [
 ];
 
 export default function Events() {
-  const [search, setSearch] = useState("");
+  const initialParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams();
+  const [search, setSearch] = useState(initialParams.get("search") || "");
   const [category, setCategory] = useState("all");
   const [mode, setMode] = useState("all");
   const [state, setState] = useState("all");
@@ -55,7 +56,13 @@ export default function Events() {
   });
 
   const filteredEvents = events?.filter(event => {
-    if (search && !event.title.toLowerCase().includes(search.toLowerCase())) return false;
+    const s = search.trim().toLowerCase();
+    if (s) {
+      const inTitle = event.title.toLowerCase().includes(s);
+      const inDesc = (event.description || "").toLowerCase().includes(s);
+      const inSkills = Array.isArray(event.skillsRequired) && event.skillsRequired.some(sk => sk.toLowerCase().includes(s));
+      if (!inTitle && !inDesc && !inSkills) return false;
+    }
     if (category !== "all" && event.category !== category) return false;
     if (mode !== "all" && event.mode !== mode) return false;
     if (state !== "all" && event.state !== state) return false;

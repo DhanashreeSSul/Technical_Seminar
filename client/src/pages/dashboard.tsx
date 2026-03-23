@@ -342,11 +342,11 @@ export default function Dashboard() {
                     <p className="font-medium">{userData.language === "hi" ? "Hindi" : "English"}</p>
                   </div>
                 </div>
-                {userData.interests?.length > 0 && (
+                {Array.isArray(userData.interests) && userData.interests.length > 0 && (
                   <div>
                     <p className="text-sm text-muted-foreground mb-2">Interests</p>
                     <div className="flex flex-wrap gap-2">
-                      {userData.interests.map((interest) => (
+                      {Array.isArray(userData.interests) && userData.interests.map((interest) => (
                         <Badge key={interest} variant="secondary">{interest}</Badge>
                       ))}
                     </div>

@@ -1,4 +1,5 @@
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { 
@@ -76,6 +77,37 @@ const stats = [
 ];
 
 export default function Home() {
+  const [, navigate] = useLocation();
+  const [selectedDomains, setSelectedDomains] = useState<string[]>([]);
+
+  const domains = [
+    { label: "Handicrafts", emoji: "🧵" },
+    { label: "Tailoring & Fashion", emoji: "✂️" },
+    { label: "Digital Skills", emoji: "💻" },
+    { label: "Cooking & Food", emoji: "👩‍🍳" },
+    { label: "Agriculture", emoji: "🌾" },
+    { label: "Business & Entrepreneurship", emoji: "💼" },
+    { label: "Healthcare & Wellness", emoji: "⚕️" },
+    { label: "Languages & Communication", emoji: "🗣️" },
+    { label: "Accounting & Finance", emoji: "📊" },
+    { label: "Education & Training", emoji: "📚" },
+  ];
+
+  const toggleDomain = (label: string) => {
+    setSelectedDomains(prev =>
+      prev.includes(label) ? prev.filter(d => d !== label) : [...prev, label]
+    );
+  };
+
+  const navigateToEvents = (domain?: string) => {
+    const q = encodeURIComponent((domain ? [domain] : selectedDomains).join(", "));
+    navigate(`/events?search=${q}`);
+  };
+
+  const navigateToSchemes = (domain?: string) => {
+    const q = encodeURIComponent((domain ? [domain] : selectedDomains).join(", "));
+    navigate(`/schemes?search=${q}`);
+  };
   return (
     <div className="min-h-screen">
       <section className="relative py-16 md:py-24 lg:py-32 overflow-hidden">
@@ -127,6 +159,78 @@ export default function Home() {
                   ))}
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 md:py-24 bg-muted/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+              <span className="text-2xl">💚</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold" style={{ fontFamily: "Poppins, sans-serif" }}>
+              Discover Your Opportunities
+            </h2>
+            <p className="text-muted-foreground mt-2">
+              Select your interests to find personalized NGO courses and government schemes
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {domains.map((d) => {
+              const selected = selectedDomains.includes(d.label);
+              return (
+                <Card
+                  key={d.label}
+                  className={`cursor-pointer transition hover-elevate ${selected ? "ring-2 ring-primary" : ""}`}
+                  onClick={() => navigateToEvents(d.label)}
+                  data-testid={`card-domain-${d.label.slice(0,8)}`}
+                >
+                  <CardContent className="p-6 flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-2xl">
+                      {d.emoji}
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-semibold">{d.label}</div>
+                      <div className="text-xs text-muted-foreground">Click to see NGO courses</div>
+                    </div>
+                    <Button
+                      variant={selected ? "default" : "outline"}
+                      size="sm"
+                      onClick={(e) => { e.stopPropagation(); toggleDomain(d.label); }}
+                    >
+                      {selected ? "Selected" : "Select"}
+                    </Button>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+
+          <div className="mt-6 p-4 bg-background border rounded-xl flex flex-col sm:flex-row items-center gap-3">
+            <div className="flex-1 text-sm text-muted-foreground">
+              {selectedDomains.length === 0 ? "Select at least one interest" : `Selected: ${selectedDomains.join(", ")}`}
+            </div>
+            <div className="flex gap-2">
+              <Button 
+                onClick={() => navigateToEvents()}
+                disabled={selectedDomains.length === 0}
+                className="gap-2"
+                data-testid="button-explore-events"
+              >
+                Explore Courses
+              </Button>
+              <Button 
+                variant="outline"
+                onClick={() => navigateToSchemes()}
+                disabled={selectedDomains.length === 0}
+                className="gap-2"
+                data-testid="button-explore-schemes"
+              >
+                Explore Schemes
+              </Button>
             </div>
           </div>
         </div>

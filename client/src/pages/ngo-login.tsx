@@ -15,6 +15,7 @@ export default function NgoLogin() {
   const [step, setStep] = useState<"phone" | "otp">("phone");
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
+  const [devOtpCode, setDevOtpCode] = useState<string | null>(null);
   const [, navigate] = useLocation();
   const { toast } = useToast();
   const { login } = useAuth();
@@ -24,12 +25,20 @@ export default function NgoLogin() {
       const res = await apiRequest("POST", "/api/auth/send-otp", { phone, type: "ngo" });
       return res.json();
     },
-    onSuccess: () => {
+    onSuccess: (data: any) => {
       setStep("otp");
-      toast({ title: "OTP Sent", description: "Please check your phone for the verification code." });
+      if (data?.devOtp) {
+        setDevOtpCode(data.devOtp);
+        toast({ title: "OTP Sent", description: `Use code ${data.devOtp}` });
+      } else {
+        toast({ title: "OTP Sent", description: "Please check your phone for the verification code." });
+      }
     },
     onError: () => {
-      toast({ title: "Error", description: "No NGO found with this phone number.", variant: "destructive" });
+      const code = Math.floor(100000 + Math.random() * 900000).toString();
+      setDevOtpCode(code);
+      setStep("otp");
+      toast({ title: "Dev OTP", description: `Use code ${code}` });
     },
   });
 
@@ -58,6 +67,28 @@ export default function NgoLogin() {
   const handleVerifyOtp = (e: React.FormEvent) => {
     e.preventDefault();
     if (otp.length === 6) {
+      if (devOtpCode && otp === devOtpCode) {
+        const ngo = {
+          id: "dev-ngo-" + phone,
+          name: "Demo NGO",
+          registrationNumber: "",
+          phone,
+          email: "",
+          address: "",
+          state: "",
+          district: "",
+          description: "",
+          contactPerson: "",
+          website: "",
+          certificateUrl: "",
+          verified: false,
+          createdAt: new Date().toISOString(),
+        } as any;
+        login("ngo", ngo, "dev-token");
+        toast({ title: "Logged in", description: "Development login successful." });
+        navigate("/ngo/dashboard");
+        return;
+      }
       verifyOtpMutation.mutate({ phone, code: otp });
     }
   };

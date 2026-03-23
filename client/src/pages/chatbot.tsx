@@ -37,6 +37,116 @@ const quickPrompts = {
   ],
 };
 
+function localAssistantResponse(input: string, lang: "en" | "hi"): string {
+  const t = input.toLowerCase();
+  if (lang === "hi") {
+    if (t.includes("कौशल") || t.includes("सीख") || t.includes("स्किल") || t.includes("course")) {
+      return (
+        "बहुत बढ़िया! यहां 4 सप्ताह की योजना है:\n" +
+        "सप्ताह 1: एक कौशल चुनें और YouTube पर बेसिक्स सीखें।\n" +
+        "सप्ताह 2: रोज़ 30–45 मिनट अभ्यास करें और छोटा प्रोजेक्ट शुरू करें।\n" +
+        "सप्ताह 3: एक छोटा प्रोजेक्ट पूरा करें और अपना रेज़्यूमे अपडेट करें।\n" +
+        "सप्ताह 4: She Connects Now पर NGO ईवेंट देखें और आवेदन करें।\n" +
+        "अगला कदम: अपने मौजूदा कौशल और रुचियां बताएं।"
+      );
+    }
+    if (t.includes("नौकरी") || t.includes("job") || t.includes("work")) {
+      return (
+        "नौकरी के लिए ये कदम अपनाएं:\n" +
+        "1) अपना रेज़्यूमे बनाएं/अपडेट करें (Canva टेम्पलेट)।\n" +
+        "2) NCS और Skill India पर रजिस्टर करें।\n" +
+        "3) रोज़ 3 भूमिकाओं के लिए आवेदन करें।\n" +
+        "4) NGO ट्रेनिंग/वर्कशॉप जॉइन करें।\n" +
+        "क्या आप चाहें तो मैं 4 सप्ताह का रोडमैप बना दूं?"
+      );
+    }
+    if (t.includes("व्यवसाय") || t.includes("business") || t.includes("startup") || t.includes("उद्यम")) {
+      return (
+        "छोटा व्यवसाय शुरू करने के स्टेप्स:\n" +
+        "1) आइडिया चुनें और बेसिक लागत लिखें।\n" +
+        "2) Mudra Loan/PMEGP विकल्प देखें।\n" +
+        "3) सरल बजट और दैनिक योजना बनाएं।\n" +
+        "4) लोकल और ऑनलाइन दोनों जगह मार्केटिंग करें।\n" +
+        "मैं आपके लिए 4 सप्ताह की योजना बना सकती हूं।"
+      );
+    }
+    if (t.includes("योजना") || t.includes("scheme") || t.includes("सरकार")) {
+      return (
+        "लोकप्रिय सरकारी योजनाएं:\n" +
+        "• PMEGP: नए उद्यम के लिए सहायता।\n" +
+        "• Mudra Loan: माइक्रो-उद्यम के लिए वित्त।\n" +
+        "• Skill India/PMKVY: कौशल प्रशिक्षण।\n" +
+        "बताएं कि आपका लक्ष्य क्या है, मैं सही विकल्प सुझाऊंगी।"
+      );
+    }
+    if (t.includes("रोडमैप") || t.includes("roadmap") || t.includes("plan")) {
+      return (
+        "4 सप्ताह का रोडमैप:\n" +
+        "सप्ताह 1: लक्ष्य तय करें, बेसिक्स सीखें।\n" +
+        "सप्ताह 2: हर दिन अभ्यास, मिनी-प्रोजेक्ट।\n" +
+        "सप्ताह 3: एक प्रोजेक्ट पूरा करें, रेज़्यूमे/प्रोफाइल अपडेट करें।\n" +
+        "सप्ताह 4: अवसरों के लिए आवेदन, इंटरव्यू तैयारी।\n" +
+        "अगर आप चाहें तो मैं इसे आपकी रुचि के अनुसार कस्टमाइज़ कर दूं।"
+      );
+    }
+    return (
+      "मैं आपकी मदद के लिए यहां हूं। अपने लक्ष्य, कौशल और शहर बताएं, ताकि मैं सही संसाधन, कोर्स, नौकरी या योजनाएं सुझा सकूं।"
+    );
+  }
+  if (t.includes("learn") || t.includes("skill") || t.includes("course") || t.includes("upskill")) {
+    return (
+      "Great choice! Here’s a 4-week plan:\n" +
+      "Week 1: Pick a skill and learn basics on YouTube.\n" +
+      "Week 2: Practice 30–45 min daily; start a mini project.\n" +
+      "Week 3: Complete one small project; update your resume.\n" +
+      "Week 4: Check NGO events on She Connects Now and apply.\n" +
+      "Next: Tell me your current skills and interests."
+    );
+  }
+  if (t.includes("job") || t.includes("work") || t.includes("hiring") || t.includes("career")) {
+    return (
+      "To find jobs, follow these steps:\n" +
+      "1) Create/refresh your resume (Canva template).\n" +
+      "2) Register on NCS and Skill India portals.\n" +
+      "3) Apply to 3 roles daily.\n" +
+      "4) Join local NGO training/workshops.\n" +
+      "Want me to generate a 4-week roadmap?"
+    );
+  }
+  if (t.includes("business") || t.includes("startup") || t.includes("enterprise") || t.includes("shop")) {
+    return (
+      "Steps to start a small business:\n" +
+      "1) Pick an idea and write basic costs.\n" +
+      "2) Explore Mudra Loan/PMEGP.\n" +
+      "3) Create a simple budget and daily plan.\n" +
+      "4) Market locally and online.\n" +
+      "I can build a 4-week plan for you."
+    );
+  }
+  if (t.includes("scheme") || t.includes("government") || t.includes("pmegp") || t.includes("mudra")) {
+    return (
+      "Popular government schemes:\n" +
+      "• PMEGP: Support for new enterprises.\n" +
+      "• Mudra Loan: Finance for micro-enterprises.\n" +
+      "• Skill India/PMKVY: Training programs.\n" +
+      "Share your goal and I’ll suggest the best option."
+    );
+  }
+  if (t.includes("roadmap") || t.includes("plan") || t.includes("guide")) {
+    return (
+      "4-week roadmap:\n" +
+      "Week 1: Define goal, learn basics.\n" +
+      "Week 2: Daily practice, mini project.\n" +
+      "Week 3: Finish a project, update resume/profile.\n" +
+      "Week 4: Apply to opportunities, prep interviews.\n" +
+      "I can tailor this to your interests."
+    );
+  }
+  return (
+    "I’m here to help. Share your goal, skills, and city so I can suggest the right resources, courses, jobs, or schemes."
+  );
+}
+
 export default function Chatbot() {
   const { user } = useAuth();
   const [, navigate] = useLocation();
@@ -92,8 +202,13 @@ export default function Chatbot() {
       setMessages(prev => [...prev, assistantMessage]);
       queryClient.invalidateQueries({ queryKey: ["/api/chat/history"] });
     },
-    onError: () => {
-      setMessages(prev => prev.slice(0, -1));
+    onError: (_err, variables) => {
+      const assistantMessage: ChatMessage = {
+        role: "assistant",
+        content: localAssistantResponse(variables.content, variables.lang as "en" | "hi"),
+        timestamp: new Date().toISOString(),
+      };
+      setMessages(prev => [...prev, assistantMessage]);
     },
   });
 

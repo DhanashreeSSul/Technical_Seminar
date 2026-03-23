@@ -170,14 +170,14 @@ export default function EventDetail() {
               </CardContent>
             </Card>
 
-            {event.skillsRequired?.length > 0 && (
+            {Array.isArray(event.skillsRequired) && event.skillsRequired.length > 0 && (
               <Card>
                 <CardHeader>
                   <CardTitle>Skills & Requirements</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
-                    {event.skillsRequired.map((skill, index) => (
+                    {Array.isArray(event.skillsRequired) && event.skillsRequired.map((skill, index) => (
                       <Badge key={index} variant="secondary">{skill}</Badge>
                     ))}
                   </div>

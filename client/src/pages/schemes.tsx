@@ -25,7 +25,8 @@ const categories = [
 ];
 
 export default function Schemes() {
-  const [search, setSearch] = useState("");
+  const initialParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams();
+  const [search, setSearch] = useState(initialParams.get("search") || "");
   const [category, setCategory] = useState("all");
   const [language, setLanguage] = useState<"en" | "hi">("en");
 
