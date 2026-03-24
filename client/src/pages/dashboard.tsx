@@ -7,11 +7,11 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link, useLocation } from "wouter";
-import { 
-  MessageSquare, 
-  Calendar, 
-  Bookmark, 
-  User, 
+import {
+  MessageSquare,
+  Calendar,
+  Bookmark,
+  User,
   Target,
   CheckCircle,
   Clock,
@@ -170,10 +170,10 @@ export default function Dashboard() {
                       </Link>
                     </div>
                   )) || (
-                    <p className="text-muted-foreground text-center py-4">
-                      Chat with our AI to get personalized recommendations
-                    </p>
-                  )}
+                      <p className="text-muted-foreground text-center py-4">
+                        Chat with our AI to get personalized recommendations
+                      </p>
+                    )}
                   <Link href="/events">
                     <Button variant="outline" className="w-full" data-testid="button-view-all-events">
                       View All Events
@@ -223,6 +223,48 @@ export default function Dashboard() {
                 </CardContent>
               </Card>
             </div>
+
+            <div className="grid md:grid-cols-3 gap-4 mt-6">
+              <Link href="/jobs">
+                <Card className="hover-elevate cursor-pointer">
+                  <CardContent className="p-4 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-chart-4/10 flex items-center justify-center">
+                      <ArrowRight className="h-5 w-5 text-chart-4" />
+                    </div>
+                    <div>
+                      <p className="font-medium">Browse Jobs</p>
+                      <p className="text-xs text-muted-foreground">Find work matching your skills</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+              <Link href="/training">
+                <Card className="hover-elevate cursor-pointer">
+                  <CardContent className="p-4 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-chart-5/10 flex items-center justify-center">
+                      <ArrowRight className="h-5 w-5 text-chart-5" />
+                    </div>
+                    <div>
+                      <p className="font-medium">Training Courses</p>
+                      <p className="text-xs text-muted-foreground">Free & certified courses</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+              <Link href="/schemes">
+                <Card className="hover-elevate cursor-pointer">
+                  <CardContent className="p-4 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-chart-3/10 flex items-center justify-center">
+                      <ArrowRight className="h-5 w-5 text-chart-3" />
+                    </div>
+                    <div>
+                      <p className="font-medium">Government Schemes</p>
+                      <p className="text-xs text-muted-foreground">Schemes for women empowerment</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            </div>
           </TabsContent>
 
           <TabsContent value="roadmap">
@@ -230,7 +272,7 @@ export default function Dashboard() {
               <CardHeader>
                 <CardTitle>Your Career Roadmap</CardTitle>
                 <CardDescription>
-                  {currentRoadmap 
+                  {currentRoadmap
                     ? `${currentRoadmap.title} - ${currentRoadmap.progress}% complete`
                     : "Chat with our AI to create your personalized roadmap"
                   }

@@ -108,7 +108,7 @@ export default function NgoLogin() {
           </div>
           <CardTitle className="text-2xl">NGO Login</CardTitle>
           <CardDescription>
-            {step === "phone" 
+            {step === "phone"
               ? "Enter your registered phone number"
               : `Enter the 6-digit code sent to ${phone}`
             }
@@ -132,16 +132,16 @@ export default function NgoLogin() {
                   />
                 </div>
               </div>
-              <Button 
-                type="submit" 
-                className="w-full" 
+              <Button
+                type="submit"
+                className="w-full"
                 disabled={phone.length < 10 || sendOtpMutation.isPending}
                 data-testid="button-ngo-login-otp"
               >
                 {sendOtpMutation.isPending ? "Sending..." : "Send OTP"}
               </Button>
               <p className="text-sm text-center text-muted-foreground">
-                New to EmpowerHer?{" "}
+                New to She Connects Now?{" "}
                 <Link href="/ngo/register" className="text-primary hover:underline">
                   Register your NGO
                 </Link>
@@ -168,26 +168,26 @@ export default function NgoLogin() {
                   </InputOTPGroup>
                 </InputOTP>
               </div>
-              <Button 
-                type="submit" 
-                className="w-full" 
+              <Button
+                type="submit"
+                className="w-full"
                 disabled={otp.length < 6 || verifyOtpMutation.isPending}
                 data-testid="button-ngo-login-verify"
               >
                 {verifyOtpMutation.isPending ? "Verifying..." : "Login"}
               </Button>
               <div className="flex justify-between text-sm">
-                <Button 
-                  type="button" 
-                  variant="ghost" 
+                <Button
+                  type="button"
+                  variant="ghost"
                   size="sm"
                   onClick={() => setStep("phone")}
                 >
                   Change Number
                 </Button>
-                <Button 
-                  type="button" 
-                  variant="ghost" 
+                <Button
+                  type="button"
+                  variant="ghost"
                   size="sm"
                   onClick={() => sendOtpMutation.mutate(phone)}
                   disabled={sendOtpMutation.isPending}

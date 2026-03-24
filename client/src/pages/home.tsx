@@ -2,71 +2,98 @@ import { Link, useLocation } from "wouter";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { 
-  MessageSquare, 
-  GraduationCap, 
-  Briefcase, 
+import {
+  MessageSquare,
+  GraduationCap,
+  Briefcase,
   Users,
   Shield,
   Lock,
   Trash2,
   CheckCircle,
   ArrowRight,
-  Heart
+  Heart,
+  MapPin,
+  Mic,
+  Globe,
+  Wifi,
+  Scissors,
+  Monitor,
+  ChefHat,
+  Wheat,
+  Stethoscope,
+  Languages,
+  BarChart3,
+  BookOpen,
+  ClipboardList,
+  Bot,
+  type LucideIcon,
+  Paintbrush
 } from "lucide-react";
 
 const features = [
   {
     icon: MessageSquare,
-    title: "AI-Powered Guidance",
-    description: "Get personalized career advice in your language. Our chatbot understands your needs and suggests the best path forward.",
+    title: "AI-Powered Chatbot",
+    description: "Get personalized career advice in Hindi, English, and more. Our NLP-powered chatbot understands your needs and guides you step by step.",
   },
   {
     icon: GraduationCap,
-    title: "Skill Development",
-    description: "Access curated courses, workshops, and learning resources from trusted NGOs and government portals.",
+    title: "Skill Development & Training",
+    description: "Access certified courses from government programs like Skill India, PMKVY, and trusted NGOs — many are completely free.",
   },
   {
     icon: Briefcase,
-    title: "Job & Business Opportunities",
-    description: "Discover job openings, internships, and micro-enterprise ideas tailored to your skills and location.",
+    title: "Job & Business Matching",
+    description: "AI-based career recommender matches your interests and skills with real jobs, internships, and micro-enterprise ideas.",
   },
   {
     icon: Users,
-    title: "NGO Network",
-    description: "Connect with verified NGOs and foundations offering courses, mentorship, and support programs.",
+    title: "NGO & Foundation Network",
+    description: "Connect with verified NGOs and foundations offering courses, mentorship, and skill-development programs near you.",
+  },
+  {
+    icon: MapPin,
+    title: "Hyperlocal Opportunities",
+    description: "Discover nearby jobs, training centers, and government offices relevant to your location using our location-aware mapping.",
+  },
+  {
+    icon: Mic,
+    title: "Voice & Multilingual Support",
+    description: "Use voice input to talk to the chatbot in your local language. Supports Hindi, English, Tamil, Telugu, Marathi, and more.",
   },
 ];
 
 const steps = [
   {
     number: "01",
-    title: "Share Your Goals",
-    description: "Tell us about your interests, skills, and what you're looking for - a job, skill, or business idea.",
+    title: "Register Securely",
+    description: "Sign up with your phone number using OTP verification. No Aadhaar or sensitive data required — your privacy is our priority.",
   },
   {
     number: "02",
-    title: "Get Personalized Guidance",
-    description: "Our AI analyzes your profile and matches you with the best opportunities and learning paths.",
+    title: "Share Your Goals",
+    description: "Tell us about your interests, skills, and what you're looking for — a job, skill training, or business idea.",
   },
   {
     number: "03",
-    title: "Follow Your Roadmap",
-    description: "Receive a week-by-week action plan to achieve your goals with clear milestones.",
+    title: "Get AI Recommendations",
+    description: "Our AI analyzes your profile and matches you with the best opportunities, courses, and government schemes.",
   },
   {
     number: "04",
-    title: "Connect & Grow",
-    description: "Join NGO programs, attend workshops, and build your skills with community support.",
+    title: "Follow Your Roadmap",
+    description: "Receive a personalized week-by-week action plan to achieve your goals with clear milestones and community support.",
   },
 ];
 
 const trustFeatures = [
   { icon: Shield, text: "No sensitive data stored (no Aadhaar)" },
-  { icon: Lock, text: "Your conversations stay private" },
-  { icon: Trash2, text: "Delete your account anytime" },
+  { icon: Lock, text: "Your conversations stay private & encrypted" },
+  { icon: Trash2, text: "Delete your account and data anytime" },
   { icon: CheckCircle, text: "Consent-based data collection" },
-  { icon: Shield, text: "Secure OTP verification" },
+  { icon: Shield, text: "Secure OTP + JWT authentication" },
+  { icon: Wifi, text: "Works in low-bandwidth & offline mode" },
 ];
 
 const stats = [
@@ -80,17 +107,17 @@ export default function Home() {
   const [, navigate] = useLocation();
   const [selectedDomains, setSelectedDomains] = useState<string[]>([]);
 
-  const domains = [
-    { label: "Handicrafts", emoji: "🧵" },
-    { label: "Tailoring & Fashion", emoji: "✂️" },
-    { label: "Digital Skills", emoji: "💻" },
-    { label: "Cooking & Food", emoji: "👩‍🍳" },
-    { label: "Agriculture", emoji: "🌾" },
-    { label: "Business & Entrepreneurship", emoji: "💼" },
-    { label: "Healthcare & Wellness", emoji: "⚕️" },
-    { label: "Languages & Communication", emoji: "🗣️" },
-    { label: "Accounting & Finance", emoji: "📊" },
-    { label: "Education & Training", emoji: "📚" },
+  const domains: { label: string; icon: LucideIcon }[] = [
+    { label: "Handicrafts", icon: Paintbrush },
+    { label: "Tailoring & Fashion", icon: Scissors },
+    { label: "Digital Skills", icon: Monitor },
+    { label: "Cooking & Food", icon: ChefHat },
+    { label: "Agriculture", icon: Wheat },
+    { label: "Business & Entrepreneurship", icon: Briefcase },
+    { label: "Healthcare & Wellness", icon: Stethoscope },
+    { label: "Languages & Communication", icon: Languages },
+    { label: "Accounting & Finance", icon: BarChart3 },
+    { label: "Education & Training", icon: BookOpen },
   ];
 
   const toggleDomain = (label: string) => {
@@ -117,15 +144,16 @@ export default function Home() {
             <div className="space-y-8">
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full text-primary text-sm font-medium">
                 <Heart className="h-4 w-4 fill-current" />
-                Free AI-Powered Career Guidance
+                Secured AI-Enabled Platform for Women Empowerment
               </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight" style={{ fontFamily: "Poppins, sans-serif" }}>
-                Discover Your Path to{" "}
-                <span className="text-primary">Success</span>
+                She Connects{" "}
+                <span className="text-primary">Now</span>
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground max-w-xl">
-                Whether you want to learn a skill, find a job, or start a small business — 
-                we guide you step by step through trusted NGOs and government schemes.
+                Digital Literacy & Career Empowerment for Rural Women in India.
+                Whether you want to learn a skill, find a job, or start a small business —
+                we guide you step by step in your own language.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link href="/auth">
@@ -135,7 +163,7 @@ export default function Home() {
                 </Link>
                 <Link href="/ngo/register">
                   <Button variant="outline" size="lg" className="w-full sm:w-auto" data-testid="button-hero-ngo">
-                    Register as NGO
+                    Register as NGO / Foundation
                   </Button>
                 </Link>
               </div>
@@ -144,15 +172,21 @@ export default function Home() {
               <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 to-accent/20 rounded-3xl blur-3xl" />
               <div className="relative bg-gradient-to-br from-primary/10 to-accent/10 rounded-3xl p-8 border">
                 <div className="grid grid-cols-2 gap-4">
-                  {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="bg-card rounded-xl p-4 shadow-sm border">
+                  {[
+                    { Icon: GraduationCap, label: "Skills" },
+                    { Icon: Briefcase, label: "Jobs" },
+                    { Icon: ClipboardList, label: "Schemes" },
+                    { Icon: Bot, label: "AI Guide" },
+                  ].map((item) => (
+                    <div key={item.label} className="bg-card rounded-xl p-4 shadow-sm border">
+                      <div className="mb-2"><item.Icon className="h-6 w-6 text-primary" /></div>
                       <div className="h-3 bg-muted rounded w-3/4 mb-2" />
-                      <div className="h-2 bg-muted rounded w-1/2" />
+                      <div className="text-xs text-muted-foreground">{item.label}</div>
                     </div>
                   ))}
                 </div>
                 <div className="mt-4 flex gap-2">
-                  {["Skills", "Jobs", "Learning"].map((tag) => (
+                  {["Skills", "Jobs", "Training", "Schemes"].map((tag) => (
                     <span key={tag} className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">
                       {tag}
                     </span>
@@ -168,13 +202,13 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-              <span className="text-2xl">💚</span>
+              <Heart className="h-6 w-6 text-primary fill-primary" />
             </div>
             <h2 className="text-3xl md:text-4xl font-bold" style={{ fontFamily: "Poppins, sans-serif" }}>
               Discover Your Opportunities
             </h2>
             <p className="text-muted-foreground mt-2">
-              Select your interests to find personalized NGO courses and government schemes
+              Select your interests to find personalized NGO courses, training programs, and government schemes
             </p>
           </div>
 
@@ -186,11 +220,11 @@ export default function Home() {
                   key={d.label}
                   className={`cursor-pointer transition hover-elevate ${selected ? "ring-2 ring-primary" : ""}`}
                   onClick={() => navigateToEvents(d.label)}
-                  data-testid={`card-domain-${d.label.slice(0,8)}`}
+                  data-testid={`card-domain-${d.label.slice(0, 8)}`}
                 >
                   <CardContent className="p-6 flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-2xl">
-                      {d.emoji}
+                    <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <d.icon className="h-6 w-6 text-primary" />
                     </div>
                     <div className="flex-1">
                       <div className="font-semibold">{d.label}</div>
@@ -214,7 +248,7 @@ export default function Home() {
               {selectedDomains.length === 0 ? "Select at least one interest" : `Selected: ${selectedDomains.join(", ")}`}
             </div>
             <div className="flex gap-2">
-              <Button 
+              <Button
                 onClick={() => navigateToEvents()}
                 disabled={selectedDomains.length === 0}
                 className="gap-2"
@@ -222,7 +256,7 @@ export default function Home() {
               >
                 Explore Courses
               </Button>
-              <Button 
+              <Button
                 variant="outline"
                 onClick={() => navigateToSchemes()}
                 disabled={selectedDomains.length === 0}
@@ -240,13 +274,13 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ fontFamily: "Poppins, sans-serif" }}>
-              Everything You Need to Grow
+              Core Platform Features
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              A complete platform connecting you to opportunities, skills, and support systems.
+              A complete AI-enabled platform connecting rural women to career opportunities, digital skills, and government support systems.
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, index) => (
               <Card key={index} className="group hover-elevate">
                 <CardContent className="p-6 space-y-4">
@@ -293,14 +327,14 @@ export default function Home() {
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full text-primary text-sm font-medium mb-4">
                 <Lock className="h-4 w-4" />
-                Your Privacy Matters
+                Privacy-Preserving Design
               </div>
               <h2 className="text-3xl md:text-4xl font-bold mb-6" style={{ fontFamily: "Poppins, sans-serif" }}>
                 Built with Trust & Safety
               </h2>
               <p className="text-muted-foreground mb-8">
-                We are committed to protecting your privacy. EmpowerHer is a guidance platform — 
-                we connect you to opportunities, not collect your data.
+                She Connects Now follows privacy-preserving AI principles and data minimization.
+                We connect you to opportunities, not collect your data. Your security is our foundation.
               </p>
               <ul className="space-y-4">
                 {trustFeatures.map((item, index) => (
@@ -333,13 +367,20 @@ export default function Home() {
             Ready to Start Your Journey?
           </h2>
           <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Join thousands of women who have discovered new paths to success through our platform.
+            Join thousands of women who have discovered new paths to success through She Connects Now.
           </p>
-          <Link href="/auth">
-            <Button size="lg" className="gap-2" data-testid="button-cta-start">
-              Get Started Free <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/auth">
+              <Button size="lg" className="gap-2" data-testid="button-cta-start">
+                Get Started Free <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+            <Link href="/training">
+              <Button variant="outline" size="lg" className="gap-2" data-testid="button-cta-training">
+                Browse Training Courses <GraduationCap className="h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -349,25 +390,27 @@ export default function Home() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <Heart className="h-6 w-6 text-primary fill-primary" />
-                <span className="font-semibold text-lg">EmpowerHer</span>
+                <span className="font-semibold text-lg" style={{ fontFamily: "Poppins, sans-serif" }}>She Connects Now</span>
               </div>
               <p className="text-sm text-muted-foreground">
-                Empowering women through AI-powered career guidance and trusted connections.
+                Secured AI-Enabled Platform for Digital Literacy & Career Empowerment for Rural Women in India.
               </p>
             </div>
             <div>
               <h4 className="font-semibold mb-4">Platform</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li><Link href="/events">Events & Courses</Link></li>
+                <li><Link href="/jobs">Jobs & Opportunities</Link></li>
+                <li><Link href="/training">Training Programs</Link></li>
                 <li><Link href="/schemes">Government Schemes</Link></li>
-                <li><Link href="/auth">Get Guidance</Link></li>
+                <li><Link href="/auth">AI Career Guide</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">For NGOs</h4>
+              <h4 className="font-semibold mb-4">For Organizations</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/ngo/register">Register</Link></li>
-                <li><Link href="/ngo/login">Login</Link></li>
+                <li><Link href="/ngo/register">Register NGO / Foundation</Link></li>
+                <li><Link href="/ngo/login">Organization Login</Link></li>
               </ul>
             </div>
             <div>
@@ -375,12 +418,13 @@ export default function Home() {
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>Privacy Policy</li>
                 <li>Terms of Service</li>
+                <li>Data Protection</li>
                 <li>Contact Us</li>
               </ul>
             </div>
           </div>
           <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-            2024 EmpowerHer. All rights reserved.
+            © 2026 She Connects Now. All rights reserved. A research project for women empowerment.
           </div>
         </div>
       </footer>

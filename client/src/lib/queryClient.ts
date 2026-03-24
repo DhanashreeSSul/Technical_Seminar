@@ -12,9 +12,14 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
+  const token = typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
+  const headers: Record<string, string> = {};
+  if (data) headers["Content-Type"] = "application/json";
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+
   const res = await fetch(url, {
     method,
-    headers: data ? { "Content-Type": "application/json" } : {},
+    headers,
     body: data ? JSON.stringify(data) : undefined,
     credentials: "include",
   });
@@ -29,8 +34,30 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
-    const res = await fetch(queryKey.join("/") as string, {
+    const [base, arg] = queryKey as [string, any?];
+    let url = base;
+
+    if (typeof arg === "string" || typeof arg === "number") {
+      url = `${base}/${arg}`;
+    } else if (arg && typeof arg === "object") {
+      const usp = new URLSearchParams();
+      for (const [key, value] of Object.entries(arg as Record<string, unknown>)) {
+        if (value === undefined || value === null) continue;
+        const str = String(value);
+        if (str.length === 0 || str === "all") continue;
+        usp.append(key, str);
+      }
+      const qs = usp.toString();
+      if (qs) url = `${base}?${qs}`;
+    }
+
+    const token = typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
+    const headers: Record<string, string> = {};
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+
+    const res = await fetch(url, {
       credentials: "include",
+      headers,
     });
 
     if (unauthorizedBehavior === "returnNull" && res.status === 401) {

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
@@ -275,6 +275,12 @@ export default function NgoDashboard() {
   const [localEvents, setLocalEvents] = useState<Event[]>([]);
   const combinedEvents = (events || []).concat(localEvents);
 
+  useEffect(() => {
+    const raw = typeof window !== "undefined" ? localStorage.getItem("local_events") : null;
+    const all = raw ? (JSON.parse(raw) as Event[]) : [];
+    setLocalEvents(all.filter(e => e.ngoId === ngoData.id));
+  }, [ngoData.id]);
+
   const RecentEventsList = React.memo(function RecentEventsList({ events }: { events: Event[] }) {
     return (
       <div className="space-y-4">
@@ -388,8 +394,14 @@ export default function NgoDashboard() {
         active: true,
         createdAt: new Date() as any,
       } as Event;
-
-      setLocalEvents(prev => [fallbackEvent, ...prev]);
+      setLocalEvents(prev => {
+        const next = [fallbackEvent, ...prev];
+        const raw = typeof window !== "undefined" ? localStorage.getItem("local_events") : null;
+        const all = raw ? (JSON.parse(raw) as Event[]) : [];
+        const merged = [fallbackEvent, ...all];
+        if (typeof window !== "undefined") localStorage.setItem("local_events", JSON.stringify(merged));
+        return next;
+      });
       setIsCreateOpen(false);
       resetForm();
       toast({ title: "Event Created (Local)", description: "Backend unreachable; saved locally for now." });
@@ -408,13 +420,21 @@ export default function NgoDashboard() {
       toast({ title: "Event Updated", description: "Your changes have been saved." });
     },
     onError: ({ id, data }: any) => {
-      setLocalEvents(prev => prev.map(e => e.id === id ? {
+      const updater = (e: Event) => ({
         ...e,
         ...data,
         startDate: data.startDate ?? e.startDate,
         endDate: data.endDate ?? e.endDate,
         skillsRequired: Array.isArray(data.skillsRequired) ? data.skillsRequired : e.skillsRequired,
-      } : e));
+      });
+      setLocalEvents(prev => {
+        const next = prev.map(e => e.id === id ? updater(e) : e);
+        const raw = typeof window !== "undefined" ? localStorage.getItem("local_events") : null;
+        const all = raw ? (JSON.parse(raw) as Event[]) : [];
+        const updatedAll = all.map(e => e.id === id ? updater(e) : e);
+        if (typeof window !== "undefined") localStorage.setItem("local_events", JSON.stringify(updatedAll));
+        return next;
+      });
       setEditingEvent(null);
       resetForm();
       toast({ title: "Event Updated (Local)", description: "Backend unreachable; changes saved locally." });
@@ -431,7 +451,14 @@ export default function NgoDashboard() {
       toast({ title: "Event Deleted", description: "The event has been removed." });
     },
     onError: (id: any) => {
-      setLocalEvents(prev => prev.filter(e => e.id !== id));
+      setLocalEvents(prev => {
+        const next = prev.filter(e => e.id !== id);
+        const raw = typeof window !== "undefined" ? localStorage.getItem("local_events") : null;
+        const all = raw ? (JSON.parse(raw) as Event[]) : [];
+        const updatedAll = all.filter(e => e.id !== id);
+        if (typeof window !== "undefined") localStorage.setItem("local_events", JSON.stringify(updatedAll));
+        return next;
+      });
       toast({ title: "Event Deleted (Local)", description: "Backend unreachable; removed locally." });
     },
   });

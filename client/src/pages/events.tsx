@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -50,12 +50,20 @@ export default function Events() {
   const [category, setCategory] = useState("all");
   const [mode, setMode] = useState("all");
   const [state, setState] = useState("all");
+  const [localEvents, setLocalEvents] = useState<Event[]>([]);
 
   const { data: events, isLoading } = useQuery<Event[]>({
     queryKey: ["/api/events", { category, mode, state, search }],
   });
 
-  const filteredEvents = events?.filter(event => {
+  useEffect(() => {
+    const raw = typeof window !== "undefined" ? localStorage.getItem("local_events") : null;
+    const all = raw ? (JSON.parse(raw) as Event[]) : [];
+    setLocalEvents(all);
+  }, []);
+
+  const merged = (events || []).concat(localEvents);
+  const filteredEvents = merged.filter(event => {
     const s = search.trim().toLowerCase();
     if (s) {
       const inTitle = event.title.toLowerCase().includes(s);

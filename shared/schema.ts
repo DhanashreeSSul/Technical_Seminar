@@ -1,157 +1,222 @@
-import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp, boolean, integer, jsonb } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
-import { relations } from "drizzle-orm";
+// ─── Shared Schema ────────────────────────────────────────────────────
+// Single source of truth for all types used by both client and server.
+// Modelled after the research project requirements:
+//   • Users (Women) & Foundations/NGOs
+//   • Jobs, Training Courses, Government Schemes
+//   • AI Chat, Career Roadmaps, Recommendations
+// ──────────────────────────────────────────────────────────────────────
 
-export const users = pgTable("users", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  phone: text("phone").notNull().unique(),
-  name: text("name"),
-  email: text("email"),
-  location: text("location"),
-  state: text("state"),
-  interests: text("interests").array(),
-  skills: text("skills").array(),
-  role: text("role").notNull().default("user"),
-  language: text("language").default("en"),
-  createdAt: timestamp("created_at").defaultNow(),
-});
+// ─── User (Women) ────────────────────────────────────────────────────
+export interface User {
+  id: string;
+  phone: string;
+  name: string;
+  email?: string;
+  location: string;
+  state?: string;
+  district?: string;
+  interests: string[];
+  skills: string[];
+  education?: string;
+  age?: number;
+  role: "user" | "women";
+  language: "en" | "hi" | "ta" | "te" | "mr" | "bn";
+  consentGiven?: boolean;
+  consentTimestamp?: string;
+  profileComplete?: boolean;
+  createdAt: string;
+  updatedAt?: string;
+}
 
-export const ngos = pgTable("ngos", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  name: text("name").notNull(),
-  registrationNumber: text("registration_number"),
-  phone: text("phone").notNull().unique(),
-  email: text("email"),
-  address: text("address"),
-  state: text("state"),
-  district: text("district"),
-  description: text("description"),
-  contactPerson: text("contact_person"),
-  website: text("website"),
-  certificateUrl: text("certificate_url"),
-  verified: boolean("verified").default(false),
-  createdAt: timestamp("created_at").defaultNow(),
-});
+// ─── NGO / Foundation / Organization ─────────────────────────────────
+export interface Ngo {
+  id: string;
+  name: string;
+  registrationNumber?: string;
+  phone: string;
+  email?: string;
+  address?: string;
+  state: string;
+  district?: string;
+  description?: string;
+  contactPerson: string;
+  website?: string;
+  certificateUrl?: string;
+  verified: boolean;
+  focusAreas?: string[];
+  createdAt: string;
+  updatedAt?: string;
+}
 
-export const events = pgTable("events", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  ngoId: varchar("ngo_id").notNull().references(() => ngos.id),
-  title: text("title").notNull(),
-  description: text("description"),
-  category: text("category").notNull(),
-  mode: text("mode").notNull(),
-  location: text("location"),
-  state: text("state"),
-  skillsRequired: text("skills_required").array(),
-  targetAudience: text("target_audience"),
-  startDate: timestamp("start_date"),
-  endDate: timestamp("end_date"),
-  registrationLink: text("registration_link"),
-  websiteLink: text("website_link"),
-  flyerUrl: text("flyer_url"),
-  views: integer("views").default(0),
-  clicks: integer("clicks").default(0),
-  active: boolean("active").default(true),
-  createdAt: timestamp("created_at").defaultNow(),
-});
+// ─── Event (Course / Workshop / Awareness Program) ───────────────────
+export interface Event {
+  id: string;
+  ngoId: string;
+  title: string;
+  description?: string;
+  category: string; // course, workshop, job, awareness, training
+  domain?: string;
+  mode: string; // online, offline, hybrid
+  location?: string;
+  state?: string;
+  skillsRequired?: string[];
+  targetAudience?: string;
+  startDate?: Date | string | null;
+  endDate?: Date | string | null;
+  registrationLink?: string;
+  websiteLink?: string;
+  flyerUrl?: string;
+  views?: number;
+  clicks?: number;
+  active?: boolean;
+  createdAt?: Date | string;
+}
 
-export const chatSessions = pgTable("chat_sessions", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  userId: varchar("user_id").notNull().references(() => users.id),
-  messages: jsonb("messages").notNull().default([]),
-  language: text("language").default("en"),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
+// ─── Job Posting ─────────────────────────────────────────────────────
+export interface Job {
+  id: string;
+  ngoId?: string;
+  title: string;
+  company: string;
+  description: string;
+  category: string; // full-time, part-time, freelance, micro-enterprise
+  skills: string[];
+  location: string;
+  state?: string;
+  district?: string;
+  isRemote: boolean;
+  salary?: string;
+  experienceRequired?: string;
+  educationRequired?: string;
+  applicationLink?: string;
+  deadline?: string;
+  postedAt: string;
+  active: boolean;
+}
 
-export const roadmaps = pgTable("roadmaps", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  userId: varchar("user_id").notNull().references(() => users.id),
-  title: text("title").notNull(),
-  goal: text("goal"),
-  weeks: jsonb("weeks").notNull().default([]),
-  progress: integer("progress").default(0),
-  createdAt: timestamp("created_at").defaultNow(),
-});
+// ─── Training Course ────────────────────────────────────────────────
+export interface TrainingCourse {
+  id: string;
+  ngoId?: string;
+  title: string;
+  provider: string;
+  description: string;
+  category: string; // digital-literacy, vocational, professional, certification
+  skills: string[];
+  duration: string;
+  mode: string; // online, offline, hybrid
+  language: string;
+  location?: string;
+  state?: string;
+  isCertified: boolean;
+  certificateProvider?: string;
+  fee?: string;
+  isFree: boolean;
+  enrollmentLink?: string;
+  startDate?: string;
+  rating?: number;
+  enrollmentCount?: number;
+  active: boolean;
+}
 
-export const savedOpportunities = pgTable("saved_opportunities", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  userId: varchar("user_id").notNull().references(() => users.id),
-  eventId: varchar("event_id").notNull().references(() => events.id),
-  createdAt: timestamp("created_at").defaultNow(),
-});
+// ─── Government Scheme ──────────────────────────────────────────────
+export interface GovernmentScheme {
+  id: string;
+  name: string;
+  nameHindi?: string;
+  description: string;
+  descriptionHindi?: string;
+  category: string; // education, employment, entrepreneurship, health, financial, skill
+  ministry?: string;
+  targetGroup?: string;
+  eligibility?: string;
+  benefits?: string;
+  applicationLink?: string;
+  documentsRequired?: string[];
+  state?: string; // if state-specific
+  active?: boolean;
+}
 
-export const governmentSchemes = pgTable("government_schemes", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  name: text("name").notNull(),
-  nameHindi: text("name_hindi"),
-  description: text("description"),
-  descriptionHindi: text("description_hindi"),
-  ministry: text("ministry"),
-  eligibility: text("eligibility"),
-  benefits: text("benefits"),
-  applicationLink: text("application_link"),
-  category: text("category"),
-  targetGroup: text("target_group"),
-});
-
-export const otpCodes = pgTable("otp_codes", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  phone: text("phone").notNull(),
-  code: text("code").notNull(),
-  expiresAt: timestamp("expires_at").notNull(),
-  used: boolean("used").default(false),
-  createdAt: timestamp("created_at").defaultNow(),
-});
-
-export const usersRelations = relations(users, ({ many }) => ({
-  chatSessions: many(chatSessions),
-  roadmaps: many(roadmaps),
-  savedOpportunities: many(savedOpportunities),
-}));
-
-export const ngosRelations = relations(ngos, ({ many }) => ({
-  events: many(events),
-}));
-
-export const eventsRelations = relations(events, ({ one }) => ({
-  ngo: one(ngos, { fields: [events.ngoId], references: [ngos.id] }),
-}));
-
-export const insertUserSchema = createInsertSchema(users).omit({ id: true, createdAt: true });
-export const insertNgoSchema = createInsertSchema(ngos).omit({ id: true, createdAt: true, verified: true });
-export const insertEventSchema = createInsertSchema(events).omit({ id: true, createdAt: true, views: true, clicks: true });
-export const insertChatSessionSchema = createInsertSchema(chatSessions).omit({ id: true, createdAt: true, updatedAt: true });
-export const insertRoadmapSchema = createInsertSchema(roadmaps).omit({ id: true, createdAt: true });
-export const insertSavedOpportunitySchema = createInsertSchema(savedOpportunities).omit({ id: true, createdAt: true });
-export const insertGovernmentSchemeSchema = createInsertSchema(governmentSchemes).omit({ id: true });
-export const insertOtpCodeSchema = createInsertSchema(otpCodes).omit({ id: true, createdAt: true });
-
-export type InsertUser = z.infer<typeof insertUserSchema>;
-export type User = typeof users.$inferSelect;
-export type InsertNgo = z.infer<typeof insertNgoSchema>;
-export type Ngo = typeof ngos.$inferSelect;
-export type InsertEvent = z.infer<typeof insertEventSchema>;
-export type Event = typeof events.$inferSelect;
-export type InsertChatSession = z.infer<typeof insertChatSessionSchema>;
-export type ChatSession = typeof chatSessions.$inferSelect;
-export type InsertRoadmap = z.infer<typeof insertRoadmapSchema>;
-export type Roadmap = typeof roadmaps.$inferSelect;
-export type InsertSavedOpportunity = z.infer<typeof insertSavedOpportunitySchema>;
-export type SavedOpportunity = typeof savedOpportunities.$inferSelect;
-export type GovernmentScheme = typeof governmentSchemes.$inferSelect;
-export type OtpCode = typeof otpCodes.$inferSelect;
-
-export type ChatMessage = {
-  role: "user" | "assistant";
-  content: string;
-  timestamp: string;
-};
-
-export type RoadmapWeek = {
+// ─── Career Roadmap ─────────────────────────────────────────────────
+export interface RoadmapWeek {
   week: number;
   title: string;
-  tasks: { id: string; task: string; completed: boolean }[];
-};
+  tasks: RoadmapTask[];
+}
+
+export interface RoadmapTask {
+  id: string;
+  task: string;
+  completed: boolean;
+  resourceUrl?: string;
+}
+
+export interface Roadmap {
+  id: string;
+  userId: string;
+  title: string;
+  goal: string;
+  weeks: RoadmapWeek[];
+  progress: number;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+// ─── Chat ───────────────────────────────────────────────────────────
+export interface ChatMessage {
+  role: "user" | "assistant" | "system";
+  content: string;
+  timestamp: string;
+  language?: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface ChatSession {
+  id: string;
+  userId: string;
+  messages: ChatMessage[];
+  createdAt: string;
+}
+
+// ─── Application (Women applying to Jobs/Courses) ────────────────────
+export interface Application {
+  id: string;
+  userId: string;
+  targetId: string; // job or course id
+  targetType: "job" | "course" | "scheme";
+  status: "pending" | "accepted" | "rejected" | "enrolled";
+  appliedAt: string;
+  notes?: string;
+}
+
+// ─── Recommendation ─────────────────────────────────────────────────
+export interface Recommendation {
+  id: string;
+  userId: string;
+  type: "job" | "course" | "scheme" | "event";
+  targetId: string;
+  score: number; // 0-1 relevance score from AI/ML
+  reason: string;
+  createdAt: string;
+}
+
+// ─── Consent Record (Privacy-Preserving) ─────────────────────────────
+export interface ConsentRecord {
+  userId: string;
+  consentType: "data-collection" | "analytics" | "communication";
+  granted: boolean;
+  timestamp: string;
+  ipAddress?: string;
+}
+
+// ─── Notification ───────────────────────────────────────────────────
+export interface Notification {
+  id: string;
+  userId: string;
+  title: string;
+  message: string;
+  type: "info" | "success" | "warning" | "opportunity";
+  read: boolean;
+  createdAt: string;
+  actionUrl?: string;
+}

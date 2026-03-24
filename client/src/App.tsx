@@ -4,6 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
+import { LanguageProvider } from "@/components/language-provider";
 import { AuthProvider } from "@/lib/auth";
 import { Header } from "@/components/header";
 import NotFound from "@/pages/not-found";
@@ -13,6 +14,8 @@ import Dashboard from "@/pages/dashboard";
 import Chatbot from "@/pages/chatbot";
 import Events from "@/pages/events";
 import EventDetail from "@/pages/event-detail";
+import Jobs from "@/pages/jobs";
+import Training from "@/pages/training";
 import NgoRegister from "@/pages/ngo-register";
 import NgoLogin from "@/pages/ngo-login";
 import NgoDashboard from "@/pages/ngo-dashboard";
@@ -27,6 +30,8 @@ function Router() {
       <Route path="/chatbot" component={Chatbot} />
       <Route path="/events" component={Events} />
       <Route path="/events/:id" component={EventDetail} />
+      <Route path="/jobs" component={Jobs} />
+      <Route path="/training" component={Training} />
       <Route path="/schemes" component={Schemes} />
       <Route path="/ngo/register" component={NgoRegister} />
       <Route path="/ngo/login" component={NgoLogin} />
@@ -40,13 +45,15 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <AuthProvider>
-          <TooltipProvider>
-            <Header />
-            <Router />
-            <Toaster />
-          </TooltipProvider>
-        </AuthProvider>
+        <LanguageProvider>
+          <AuthProvider>
+            <TooltipProvider>
+              <Header />
+              <Router />
+              <Toaster />
+            </TooltipProvider>
+          </AuthProvider>
+        </LanguageProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

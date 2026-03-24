@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLanguage } from "@/components/language-provider";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -28,7 +29,7 @@ export default function Schemes() {
   const initialParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams();
   const [search, setSearch] = useState(initialParams.get("search") || "");
   const [category, setCategory] = useState("all");
-  const [language, setLanguage] = useState<"en" | "hi">("en");
+  const { language, toggleLanguage } = useLanguage();
 
   const { data: schemes, isLoading } = useQuery<GovernmentScheme[]>({
     queryKey: ["/api/schemes"],
@@ -63,7 +64,7 @@ export default function Schemes() {
             </div>
             <Button
               variant="outline"
-              onClick={() => setLanguage(l => l === "en" ? "hi" : "en")}
+              onClick={() => toggleLanguage()}
               data-testid="button-toggle-scheme-language"
             >
               {language === "en" ? "हिंदी" : "English"}

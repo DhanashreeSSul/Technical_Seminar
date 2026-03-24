@@ -1,4 +1,5 @@
 import { useRoute, Link, useLocation } from "wouter";
+import { useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,14 @@ export default function EventDetail() {
     queryKey: ["/api/events", params?.id],
     enabled: !!params?.id,
   });
+
+  const localEvent = useMemo(() => {
+    const raw = typeof window !== "undefined" ? localStorage.getItem("local_events") : null;
+    const all = raw ? (JSON.parse(raw) as Event[]) : [];
+    return all.find(e => e.id === params?.id);
+  }, [params?.id]);
+  const ev = event || localEvent;
+  const ngo = (event as any)?.ngo as Ngo | undefined;
 
   const { data: savedStatus } = useQuery<{ saved: boolean }>({
     queryKey: ["/api/user/saved-events", params?.id],
@@ -75,7 +84,7 @@ export default function EventDetail() {
     );
   }
 
-  if (!event) {
+  if (!ev) {
     return (
       <div className="min-h-screen bg-muted/20 flex items-center justify-center">
         <Card className="max-w-md">
@@ -103,11 +112,11 @@ export default function EventDetail() {
           </Button>
         </Link>
 
-        {event.flyerUrl && (
+        {ev.flyerUrl && (
           <div className="aspect-video bg-muted rounded-lg overflow-hidden mb-6">
             <img 
-              src={event.flyerUrl} 
-              alt={event.title}
+              src={ev.flyerUrl} 
+              alt={ev.title}
               className="w-full h-full object-cover"
             />
           </div>
@@ -116,12 +125,12 @@ export default function EventDetail() {
         <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-6">
           <div>
             <h1 className="text-3xl font-bold mb-2" style={{ fontFamily: "Poppins, sans-serif" }}>
-              {event.title}
+              {ev.title}
             </h1>
             <div className="flex flex-wrap gap-2">
-              <Badge variant="secondary">{event.category}</Badge>
-              <Badge variant="outline">{event.mode}</Badge>
-              {event.active && <Badge className="bg-green-500/10 text-green-600 border-green-200">Active</Badge>}
+              <Badge variant="secondary">{ev.category}</Badge>
+              <Badge variant="outline">{ev.mode}</Badge>
+              {Boolean(ev.active) && <Badge className="bg-green-500/10 text-green-600 border-green-200">Active</Badge>}
             </div>
           </div>
           <div className="flex gap-2">
@@ -146,9 +155,9 @@ export default function EventDetail() {
                 )}
               </Button>
             )}
-            {event.registrationLink && (
+            {ev.registrationLink && (
               <Button asChild data-testid="button-register-event">
-                <a href={event.registrationLink} target="_blank" rel="noopener noreferrer" className="gap-2">
+                <a href={ev.registrationLink} target="_blank" rel="noopener noreferrer" className="gap-2">
                   <ExternalLink className="h-4 w-4" />
                   Register Now
                 </a>
@@ -165,19 +174,19 @@ export default function EventDetail() {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground whitespace-pre-wrap">
-                  {event.description || "No description available."}
+                  {ev.description || "No description available."}
                 </p>
               </CardContent>
             </Card>
 
-            {Array.isArray(event.skillsRequired) && event.skillsRequired.length > 0 && (
+            {Array.isArray(ev.skillsRequired) && ev.skillsRequired.length > 0 && (
               <Card>
                 <CardHeader>
                   <CardTitle>Skills & Requirements</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
-                    {Array.isArray(event.skillsRequired) && event.skillsRequired.map((skill, index) => (
+                {Array.isArray(ev.skillsRequired) && ev.skillsRequired.map((skill, index) => (
                       <Badge key={index} variant="secondary">{skill}</Badge>
                     ))}
                   </div>
@@ -192,20 +201,20 @@ export default function EventDetail() {
                 <CardTitle>Event Details</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {event.startDate && (
+                {ev.startDate && (
                   <div className="flex items-start gap-3">
                     <Calendar className="h-5 w-5 text-muted-foreground mt-0.5" />
                     <div>
                       <p className="text-sm font-medium">Date</p>
                       <p className="text-sm text-muted-foreground">
-                        {new Date(event.startDate).toLocaleDateString("en-IN", {
+                        {new Date(ev.startDate).toLocaleDateString("en-IN", {
                           weekday: "long",
                           year: "numeric",
                           month: "long",
                           day: "numeric",
                         })}
-                        {event.endDate && event.endDate !== event.startDate && (
-                          <> - {new Date(event.endDate).toLocaleDateString("en-IN", {
+                        {ev.endDate && ev.endDate !== ev.startDate && (
+                          <> - {new Date(ev.endDate).toLocaleDateString("en-IN", {
                             month: "long",
                             day: "numeric",
                           })}</>
@@ -215,14 +224,14 @@ export default function EventDetail() {
                   </div>
                 )}
 
-                {event.location && (
+                {ev.location && (
                   <div className="flex items-start gap-3">
                     <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
                     <div>
                       <p className="text-sm font-medium">Location</p>
                       <p className="text-sm text-muted-foreground">
-                        {event.location}
-                        {event.state && `, ${event.state}`}
+                        {ev.location}
+                        {ev.state && `, ${ev.state}`}
                       </p>
                     </div>
                   </div>
@@ -232,27 +241,27 @@ export default function EventDetail() {
                   <Globe className="h-5 w-5 text-muted-foreground mt-0.5" />
                   <div>
                     <p className="text-sm font-medium">Mode</p>
-                    <p className="text-sm text-muted-foreground capitalize">{event.mode}</p>
+                    <p className="text-sm text-muted-foreground capitalize">{ev.mode}</p>
                   </div>
                 </div>
 
-                {event.targetAudience && (
+                {ev.targetAudience && (
                   <div className="flex items-start gap-3">
                     <Users className="h-5 w-5 text-muted-foreground mt-0.5" />
                     <div>
                       <p className="text-sm font-medium">Target Audience</p>
-                      <p className="text-sm text-muted-foreground">{event.targetAudience}</p>
+                      <p className="text-sm text-muted-foreground">{ev.targetAudience}</p>
                     </div>
                   </div>
                 )}
 
-                {event.websiteLink && (
+                {ev.websiteLink && (
                   <div className="flex items-start gap-3">
                     <ExternalLink className="h-5 w-5 text-muted-foreground mt-0.5" />
                     <div>
                       <p className="text-sm font-medium">Website</p>
                       <a 
-                        href={event.websiteLink} 
+                        href={ev.websiteLink} 
                         target="_blank" 
                         rel="noopener noreferrer"
                         className="text-sm text-primary hover:underline"
@@ -265,7 +274,7 @@ export default function EventDetail() {
               </CardContent>
             </Card>
 
-            {event.ngo && (
+            {ngo && (
               <Card>
                 <CardHeader>
                   <CardTitle>Organized by</CardTitle>
@@ -276,11 +285,11 @@ export default function EventDetail() {
                       <Building2 className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <p className="font-semibold">{event.ngo.name}</p>
-                      {event.ngo.state && (
-                        <p className="text-sm text-muted-foreground">{event.ngo.state}</p>
+                      <p className="font-semibold">{ngo.name}</p>
+                      {ngo.state && (
+                        <p className="text-sm text-muted-foreground">{ngo.state}</p>
                       )}
-                      {event.ngo.verified && (
+                      {ngo.verified && (
                         <Badge variant="secondary" className="mt-2 text-xs">Verified NGO</Badge>
                       )}
                     </div>

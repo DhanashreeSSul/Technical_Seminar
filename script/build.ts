@@ -1,35 +1,48 @@
-import { build as esbuild } from "esbuild";
 import { build as viteBuild } from "vite";
+import { build as esbuild } from "esbuild";
 import { rm, readFile } from "fs/promises";
 
-// server deps to bundle to reduce openat(2) syscalls
-// which helps cold start times
 const allowlist = [
-  "@google/generative-ai",
-  "axios",
-  "connect-pg-simple",
-  "cors",
-  "date-fns",
-  "drizzle-orm",
-  "drizzle-zod",
-  "express",
-  "express-rate-limit",
-  "express-session",
-  "jsonwebtoken",
-  "memorystore",
-  "multer",
-  "nanoid",
-  "nodemailer",
-  "openai",
-  "passport",
-  "passport-local",
-  "pg",
-  "stripe",
-  "uuid",
-  "ws",
-  "xlsx",
+  // React
+  "react",
+  "react-dom",
+  // UI & Styling
+  "class-variance-authority",
+  "clsx",
+  "tailwind-merge",
+  "tailwindcss-animate",
+  "@radix-ui/react-slot",
+  // Forms & Validation
+  "@hookform/resolvers",
+  "react-hook-form",
   "zod",
   "zod-validation-error",
+  // Data & State
+  "@tanstack/react-query",
+  "drizzle-zod",
+  // Routing
+  "wouter",
+  // Animations
+  "framer-motion",
+  // Date handling
+  "date-fns",
+  "react-day-picker",
+  // Icons & UI Components
+  "lucide-react",
+  "react-icons",
+  "embla-carousel-react",
+  "react-resizable-panels",
+  "vaul",
+  "input-otp",
+  "cmdk",
+  "recharts",
+  // Auth
+  "passport",
+  "passport-local",
+  // Themes
+  "next-themes",
+  // WebSocket
+  "ws",
 ];
 
 async function buildAll() {
@@ -59,6 +72,8 @@ async function buildAll() {
     external: externals,
     logLevel: "info",
   });
+
+  console.log("build complete!");
 }
 
 buildAll().catch((err) => {
